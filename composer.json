@@ -1,7 +1,7 @@
 {
     "name": "masterslider/license",
     "description": "Fake domain to active master slider for private usage.",
-    "type": "composer-plugin",
+    "type": "library",
     "authors": [
         {
             "name": "Puleeno Nguyen",
