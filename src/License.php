@@ -16,20 +16,20 @@ class License
         $this->domain = $domain;
     }
 
-    public function fake_request_info($r, $url)
+    public function hook_to_msp_license_activation()
     {
-        if (false !== strpos($url, 'support.averta.net')) {
-            $r['user-agent'] = str_replace(get_site_url(), $this->domain, $r['user-agent']);
-            $r['body']['url'] = $this->domain;
+        add_filter( 'site_url', array($this, 'fakeLicenseDomain'), 10, 3 );
+    }
+
+    public function fakeLicenseDomain( $url, $path, $scheme) {
+        if (empty($scheme)) {
+            $scheme = 'http';
         }
-        return $r;
+        return sprintf('%s://%s%s', $scheme, $this->domain, $path);
     }
 
     public function fake()
     {
-        if (!wp_http_validate_url($this->domain)) {
-            return;
-        }
-        add_action('http_request_args', array($this, 'fake_request_info'), 10, 2);
+        add_action('wp_ajax_msp_license_activation', array($this, 'hook_to_msp_license_activation'), 5);
     }
 }
